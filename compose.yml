@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: .
+    container_name: api
+    restart: always
+    network_mode: host
+    volumes:
+      - .secrets/.env:/usr/src/app/.secrets/.env
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+    network_mode: host
+    volumes:
+      - ./data/redis:/data
+  db:
+    image: postgres:17
+    container_name: db
+    restart: always
+    network_mode: host
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./data/psql:/var/lib/postgresql/data
