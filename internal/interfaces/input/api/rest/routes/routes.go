@@ -11,6 +11,7 @@ import (
 
 func InitRoutes(
 	productHandler *handler.ProductHandler,
+	orderHandler *handler.OrderHandler,
 ) http.Handler {
 	router := chi.NewRouter()
 	env := config.Env()
@@ -32,6 +33,10 @@ func InitRoutes(
 		r.Get("/products", productHandler.GetAllProducts)
 		r.Get("/products/{id}", productHandler.GetProductByID)
 		r.Post("/products", productHandler.CreateProduct)
+	})
+	// order
+	router.Group(func(r chi.Router) {
+		r.Post("/order", orderHandler.PlaceOrder)
 	})
 
 	return router

@@ -46,9 +46,26 @@ func main() {
 	productRepo := psql.NewProductRepo(database)
 	productService := usecase.NewProductService(productRepo)
 
-	productHandler := handler.NewProductHandler(&productService)
+	pwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
 
-	handler := routes.InitRoutes(productHandler)
+	promocodeService, err := usecase.NewPromoService([]string{
+		pwd + "static/couponbase1.txt",
+		pwd + "static/couponbase2.txt",
+		pwd + "static/couponbase3.txt",
+	}, redisService)
+	if err != nil {
+		slog.ErrorContext(ctx, "Failed to create promocode service", "error", err.Error())
+		os.Exit(1)
+	}
+	orderService := usecase.NewOrderService(promocodeService, redisService, &productService, &productRepo)
+
+	productHandler := handler.NewProductHandler(&productService)
+	orderHandler := handler.NewOrderHandler(orderService)
+
+	handler := routes.InitRoutes(productHandler, orderHandler)
 
 	// start server
 	if err := http.ListenAndServe(cfg.APP_PORT, handler); err != nil {
