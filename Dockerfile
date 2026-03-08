@@ -18,7 +18,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /oolio ./cmd/server/main.go
 
 # copy static files
 COPY static ./static
-COPY migrations ./migrations
 
 EXPOSE 8080
 

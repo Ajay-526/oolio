@@ -19,6 +19,8 @@ func main() {
 	ctx := context.Background()
 	cfg := config.Env()
 
+	fmt.Println(cfg)
+
 	slog.SetDefault(slog.New(prettylog.NewHandler(os.Stdout, &slog.HandlerOptions{
 		AddSource: true,
 		Level:     slog.LevelDebug,
@@ -51,10 +53,12 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println(pwd)
+
 	promocodeService, err := usecase.NewPromoService([]string{
-		pwd + "static/couponbase1.txt",
-		pwd + "static/couponbase2.txt",
-		pwd + "static/couponbase3.txt",
+		pwd + "/static/couponbase1.txt",
+		pwd + "/static/couponbase2.txt",
+		pwd + "/static/couponbase3.txt",
 	}, redisService)
 	if err != nil {
 		slog.ErrorContext(ctx, "Failed to create promocode service", "error", err.Error())
@@ -68,7 +72,8 @@ func main() {
 	handler := routes.InitRoutes(productHandler, orderHandler)
 
 	// start server
-	if err := http.ListenAndServe(cfg.APP_PORT, handler); err != nil {
+	port := fmt.Sprintf(":%s", cfg.APP_PORT)
+	if err := http.ListenAndServe(port, handler); err != nil {
 		slog.ErrorContext(ctx, "Failed to start server", "error", err.Error())
 		os.Exit(1)
 	}
