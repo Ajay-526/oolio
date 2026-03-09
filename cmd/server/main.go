@@ -56,9 +56,9 @@ func main() {
 	fmt.Println(pwd)
 
 	promocodeService, err := usecase.NewPromoService([]string{
-		pwd + "/static/couponbase1.txt",
-		pwd + "/static/couponbase2.txt",
-		pwd + "/static/couponbase3.txt",
+		pwd + "/static/mine/file1.txt",
+		pwd + "/static/mine/file2.txt",
+		pwd + "/static/mine/file3.txt",
 	}, redisService)
 	if err != nil {
 		slog.ErrorContext(ctx, "Failed to create promocode service", "error", err.Error())
@@ -77,5 +77,4 @@ func main() {
 		slog.ErrorContext(ctx, "Failed to start server", "error", err.Error())
 		os.Exit(1)
 	}
-	fmt.Println("Serving listening on port", cfg.APP_PORT)
 }
