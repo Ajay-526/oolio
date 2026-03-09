@@ -1,12 +1,12 @@
 package core
 
 type PlaceOrderRequest struct {
-	CouponCode string `json:"couponCode"`
+	CouponCode string `json:"coupon_code"`
 	Items      []Item `json:"items"`
 }
 
 type Item struct {
-	ProductID string `json:"productId"`
+	ProductID string `json:"product_id"`
 	Quantity  int64  `json:"quantity"`
 }
 
